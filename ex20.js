@@ -1,15 +1,13 @@
-import { deepLog, loadProtos } from "./lib/lib.mjs";
+import { loadProtos } from "./lib/lib.mjs";
 loadProtos();
 
-/* Exercise 24: Retrieve each video's id, title, middle interesting moment time, and smallest box art url.
+/*
+ * Exercise 20: Retrieve the id, title, and smallest box art url for every video.
  *
- * This is a variation of the problem we solved earlier.
- * This time each video has an interesting moments collection, each representing a time during which a screenshot is interesting or representative of the title as a whole.
- * Notice that both the boxarts and interestingMoments arrays are located at the same depth in the tree.
- * Retrieve the time of the middle interesting moment and the smallest box art url simultaneously with zip().
- * Return an {id, title, time, url} object for each video.
+ * This is a variation of the problem we solved earlier, where we retrieved the url of the boxart with a width of 150px.
+ * This time we'll use reduce() instead of filter() to retrieve the smallest box art in the boxarts array.
  */
-function ex24() {
+function ex20() {
   var movieLists = [
     {
       name: "New Releases",
@@ -31,11 +29,7 @@ function ex24() {
           ],
           url: "http://api.netflix.com/catalog/titles/movies/70111470",
           rating: 4.0,
-          interestingMoments: [
-            { type: "End", time: 213432 },
-            { type: "Start", time: 64534 },
-            { type: "Middle", time: 323133 },
-          ],
+          bookmark: [],
         },
         {
           id: 654356453,
@@ -54,16 +48,12 @@ function ex24() {
           ],
           url: "http://api.netflix.com/catalog/titles/movies/70111470",
           rating: 5.0,
-          interestingMoments: [
-            { type: "End", time: 54654754 },
-            { type: "Start", time: 43524243 },
-            { type: "Middle", time: 6575665 },
-          ],
+          bookmark: [{ id: 432534, time: 65876586 }],
         },
       ],
     },
     {
-      name: "Instant Queue",
+      name: "Thrillers",
       videos: [
         {
           id: 65432445,
@@ -82,11 +72,7 @@ function ex24() {
           ],
           url: "http://api.netflix.com/catalog/titles/movies/70111470",
           rating: 4.0,
-          interestingMoments: [
-            { type: "End", time: 132423 },
-            { type: "Start", time: 54637425 },
-            { type: "Middle", time: 3452343 },
-          ],
+          bookmark: [],
         },
         {
           id: 675465,
@@ -110,35 +96,35 @@ function ex24() {
           ],
           url: "http://api.netflix.com/catalog/titles/movies/70111470",
           rating: 5.0,
-          interestingMoments: [
-            { type: "End", time: 45632456 },
-            { type: "Start", time: 234534 },
-            { type: "Middle", time: 3453434 },
-          ],
+          bookmark: [{ id: 432534, time: 65876586 }],
         },
       ],
     },
   ];
 
-  return movieLists.flatMap((list) =>
-    list.videos.flatMap((video) => {
-      const middleMoment = video.interestingMoments.filter(
-        (m) => m.type === "Middle"
-      );
-      const smallestBoxart = video.boxarts.reduceBox((smallest, current) =>
-        current.width * current.height < smallest.width * smallest.height
-          ? current
-          : smallest
-      );
+  // Use one or more concatMap, map, and reduce calls to create an array with the following items (order matters)
+  // [
+  //	 {"id": 675465,"title": "Fracture","boxart":"http://cdn-0.nflximg.com/images/2891/Fracture120.jpg" },
+  //	 {"id": 65432445,"title": "The Chamber","boxart":"http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg" },
+  //	 {"id": 654356453,"title": "Bad Boys","boxart":"http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg" },
+  //	 {"id": 70111470,"title": "Die Hard","boxart":"http://cdn-0.nflximg.com/images/2891/DieHard150.jpg" }
+  // ];
 
-      return Array.zip(middleMoment, smallestBoxart, (m, b) => ({
-        id: video.id,
-        title: video.title,
-        time: m.time,
-        url: b.url,
-      }));
-    })
+  function isLesser(acc, curr) {
+    return curr.width * curr.height < acc.width * acc.height;
+  }
+
+  return movieLists.flatMap((list) =>
+    list.videos.flatMap((video) =>
+      video.boxarts
+        .reduceBox((acc, curr) => (isLesser(acc, curr) ? curr : acc))
+        .map((art) => ({
+          id: video.id,
+          title: video.title,
+          boxart: art.url,
+        }))
+    )
   );
 }
 
-deepLog(ex24());
+console.log(ex20());
