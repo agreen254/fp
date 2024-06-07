@@ -1,4 +1,4 @@
-import { deepLog, loadProtos } from "./lib/lib.mjs";
+import { deepLog, loadProtos } from "./lib";
 loadProtos();
 
 /*

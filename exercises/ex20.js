@@ -1,27 +1,16 @@
-import { loadProtos } from "./lib/lib.mjs";
+import { loadProtos } from "./lib";
 loadProtos();
 
 /*
- * Exercise 12: Retrieve id, title, and a 150x200 box art url for every video
+ * Exercise 20: Retrieve the id, title, and smallest box art url for every video.
  *
- * You've managed to flatten a tree that's two levels deep, let's try for three! 
- * Let's say that instead of a single boxart url on each video, we had a collection of boxart objects, each with a different size and url. 
- * Create a query that selects {id, title, boxart} for every video in the movieLists. 
- * This time though, the boxart property in the result will be the url of the boxart object with dimensions of 150x200px. 
- * Let's see if you can solve this problem with map(), concatAll(), and filter().
- *
- * There's just more one thing: you can't use indexers. In other words, this is illegal:
- 
-   var itemInArray = movieLists[0];
-			
- * Furthermore, you're not allowed to use indexers in any of the remaining exercises unless you're implementing one of the five functions. 
- * There is a very good reason for this restriction, and that reason will eventually be explained. 
- * For now, you'll simply have to accept it on faith that this restriction serves a purpose. :-)
+ * This is a variation of the problem we solved earlier, where we retrieved the url of the boxart with a width of 150px.
+ * This time we'll use reduce() instead of filter() to retrieve the smallest box art in the boxarts array.
  */
-function ex12() {
+function ex20() {
   var movieLists = [
     {
-      name: "Instant Queue",
+      name: "New Releases",
       videos: [
         {
           id: 70111470,
@@ -52,9 +41,9 @@ function ex12() {
               url: "http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg",
             },
             {
-              width: 150,
+              width: 140,
               height: 200,
-              url: "http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg",
+              url: "http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg",
             },
           ],
           url: "http://api.netflix.com/catalog/titles/movies/70111470",
@@ -64,16 +53,16 @@ function ex12() {
       ],
     },
     {
-      name: "New Releases",
+      name: "Thrillers",
       videos: [
         {
           id: 65432445,
           title: "The Chamber",
           boxarts: [
             {
-              width: 150,
+              width: 130,
               height: 200,
-              url: "http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg",
+              url: "http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg",
             },
             {
               width: 200,
@@ -95,9 +84,9 @@ function ex12() {
               url: "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg",
             },
             {
-              width: 150,
+              width: 120,
               height: 200,
-              url: "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg",
+              url: "http://cdn-0.nflximg.com/images/2891/Fracture120.jpg",
             },
             {
               width: 300,
@@ -113,18 +102,22 @@ function ex12() {
     },
   ];
 
-  // Use one or more map, concatAll, and filter calls to create an array with the following items
+  // Use one or more concatMap, map, and reduce calls to create an array with the following items (order matters)
   // [
-  //	 {"id": 675465,"title": "Fracture","boxart":"http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
-  //	 {"id": 65432445,"title": "The Chamber","boxart":"http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg" },
-  //	 {"id": 654356453,"title": "Bad Boys","boxart":"http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg" },
+  //	 {"id": 675465,"title": "Fracture","boxart":"http://cdn-0.nflximg.com/images/2891/Fracture120.jpg" },
+  //	 {"id": 65432445,"title": "The Chamber","boxart":"http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg" },
+  //	 {"id": 654356453,"title": "Bad Boys","boxart":"http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg" },
   //	 {"id": 70111470,"title": "Die Hard","boxart":"http://cdn-0.nflximg.com/images/2891/DieHard150.jpg" }
   // ];
+
+  function isLesser(acc, curr) {
+    return curr.width * curr.height < acc.width * acc.height;
+  }
 
   return movieLists.flatMap((list) =>
     list.videos.flatMap((video) =>
       video.boxarts
-        .filter((art) => art.width === 150 && art.height === 200)
+        .reduceBox((acc, curr) => (isLesser(acc, curr) ? curr : acc))
         .map((art) => ({
           id: video.id,
           title: video.title,
@@ -134,4 +127,4 @@ function ex12() {
   );
 }
 
-console.log(ex12());
+console.log(ex20());

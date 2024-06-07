@@ -1,4 +1,4 @@
-import { deepLog, loadProtos } from "./lib/lib.mjs";
+import { deepLog, loadProtos } from "./lib";
 loadProtos();
 
 /* Exercise 24: Retrieve each video's id, title, middle interesting moment time, and smallest box art url.

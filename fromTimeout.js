@@ -15,5 +15,5 @@ function fromTimeout(time) {
 
 fromTimeout(5000).forEach({
   onNext: () => alert("timeout!"),
-  onComplete: () => console.log("complete!"),
+  onComplete: () => console.log("complete!")
 });

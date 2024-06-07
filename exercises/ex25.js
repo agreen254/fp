@@ -1,4 +1,4 @@
-import { deepLog } from "./lib/lib.mjs";
+import { deepLog } from "./lib";
 
 /*
  * Exercise 25: Converting from Arrays to Trees
