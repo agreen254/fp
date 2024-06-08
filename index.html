@@ -12,9 +12,20 @@
       <div id="sprite-container">
         <div id="sprite"></div>
       </div>
-      <input id="textbox" type="text" style="margin: 1rem 0" />
       <div>
-        <textarea id="results"> </textarea>
+        <button id="searchOpenButton" style="margin-right: 1rem">Search</button>
+      </div>
+      <div id="searchForm" style="display: none">
+        <input
+          id="textbox"
+          type="text"
+          autocomplete="off"
+          style="margin: 1rem 0"
+        />
+        <button id="searchCloseButton" style="margin-right: 1rem">Close</button>
+        <div>
+          <div id="results"></div>
+        </div>
       </div>
     </div>
     <script type="module" src="/main.js"></script>

@@ -1,5 +1,6 @@
 import { subscribeDrags } from "./drags";
-import { subscribeKeypresses } from "./keypresses";
+import { subscribeKeypresses, subStream } from "./search";
 
 subscribeDrags();
-subscribeKeypresses();
+// subscribeKeypresses();
+subStream();
