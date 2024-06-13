@@ -1,6 +1,8 @@
 import { subscribeDrags } from "./drags";
-import { subscribeKeypresses, subStream } from "./search";
+import { subStream } from "./search";
+import { subscribeClicks, subscribeClicksMapped } from "./Observable";
 
 subscribeDrags();
-// subscribeKeypresses();
 subStream();
+// subscribeClicks();
+subscribeClicksMapped();

@@ -11,7 +11,6 @@ const validEndpoints = [
 ];
 
 const textbox = document.querySelector("#textbox");
-const resultContainer = document.getElementById("results");
 const searchOpenButton = document.getElementById("searchOpenButton");
 const searchCloseButton = document.getElementById("searchCloseButton");
 const searchForm = document.getElementById("searchForm");
@@ -42,24 +41,6 @@ function getText(data) {
       return undefined;
   }
 }
-
-export const subscribeKeypresses = () =>
-  keypresses.forEach(() => {
-    // clear results when input is altered
-    resultContainer.replaceChildren();
-
-    if (validEndpoints.includes(textbox.value)) {
-      fetchUsers(textbox.value).forEach((res) =>
-        res.forEach((data) => {
-          const element = document.createElement("p");
-          const text = getText(data);
-
-          element.appendChild(text);
-          resultContainer.appendChild(element);
-        })
-      );
-    }
-  });
 
 function fetchUsers(query) {
   return Observable.create((observer) => {
